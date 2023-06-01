@@ -37,7 +37,7 @@ async function run() {
     // get single data from db after delete/post/update
     app.get('/coffee/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id : new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
       const result = await coffeeCollection.findOne(query);
       res.send(result);
     })
@@ -50,6 +50,29 @@ async function run() {
       const newCoffee = req.body;
       console.log(newCoffee);
       const result = await coffeeCollection.insertOne(newCoffee);
+      res.send(result);
+    })
+
+    // update specific id data
+    app.put('/coffee/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) }
+      const options = { upsert: true };
+      const updatedCoffee = req.body;
+      const coffee = {
+        $set: {
+          name: updatedCoffee.name,
+          chef: updatedCoffee.chef,
+          supplier: updatedCoffee.supplier,
+          taste: updatedCoffee.taste,
+          category: updatedCoffee.category,
+          details: updatedCoffee.details,
+          quantity: updatedCoffee.quantity,
+          price: updatedCoffee.price,
+          photoUrl: updatedCoffee.photoUrl
+        }
+      }
+      const result = await coffeeCollection.updateOne(filter, options, coffee)
       res.send(result);
     })
 
