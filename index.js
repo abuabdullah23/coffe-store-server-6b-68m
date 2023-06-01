@@ -27,6 +27,13 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    // data get from DB
+    app.get('/coffee', async(req, res)=>{
+      const cursor = coffeeCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
     // make coffee collection in db
     const coffeeCollection = client.db('coffeeDb').collection('coffee');
 
